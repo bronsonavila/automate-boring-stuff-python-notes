@@ -14,6 +14,8 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 4: [Handling Errors with Try/Except](#id-section4)
 - Section 6: [Lists](#id-section6)
 - Section 7: [Dictionaries](#id-section7)
+- Section 8: [More About Strings](#id-section8)
+- Section 9: [Running Programs from the Command Line](#id-section9)
 
 <div id='id-section1'/>
 
@@ -918,6 +920,202 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   type('hello')               # <class 'str'>
 
   type({'name': 'Zophie'})    # <class 'dict'>
+  ```
+
+[Back to TOC](#id-toc)
+
+<div id='id-section8'/>
+
+## Section 8: More About Strings
+
+### 8.19 - Advanced String Syntax
+
+- There are multiple ways to type strings, including via double quotes and escape characters:
+
+  ```python
+  "That is Alice's cat."
+
+  # Prints 'Say hello to Bob's mother.':
+
+  print('Say hello to Bob\'s mother.')
+
+  # Prints each statement on a new line:
+
+  print('Hello.\nHow are you?\nI\'m fine.')
+  ```
+
+- Types of escape characters:
+
+  | Escape character | Prints as            |
+  | :--------------: | -------------------- |
+  | \\'               | Single quote         |
+  | \\"               | Double quote         |
+  | \t               | Tab                  |
+  | \n               | Newline (line break) |
+  | \\\              | Backslash            |
+
+- If you have text that contains many backslashes that you do not want to be treated as escape characters, you can use a **raw string**, which is a string that begins with a lowercase "r":
+
+  ```python
+  # Prints without the letters "t" and "n", and inserts tab and newline characters instead:
+
+  print('C:\temp\new')
+
+  # Prints text as written:
+
+  print(r'C:\temp\new')
+  ```
+
+- Although you can use `\n` to add newlines to a string, it is often easier to use **multiline strings** with triple quotes (either single or double quotes). Any quotes, tabs, or newlines within the triple quotes are considered part of the string:
+
+  ```python
+  spam = """Dear Alice,
+  Eve's cat is orange.
+  Sincerely,
+  Bob"""
+
+  print(spam)     # (Prints each line on a new line)
+
+  spam            # "Dear Alice,\nEve's cat is orange.\nSincerely,\nBob"
+  ```
+
+### 8.20 - String Methods
+
+- The `upper()` and `lower()` methods return a string where all characters are in uppercase or lowercase, respectively:
+
+  ```python
+  spam = 'Hello, world!'
+
+  spam.upper()    # 'HELLO, WORLD!'
+
+  spam.lower()    # 'hello, world!'
+  ```
+
+  - **NOTE:** Because strings are immutable, string methods do not modify the original string. If you want to actually modify the string value stored to a variable, you must say, e.g.: `spam = spam.lower()`
+
+- The `isupper()` and `islower()` methods return a Boolean value indicating whether all letters in the string are uppercase or lowercase, respectively:
+
+  ```python
+  spam = 'hello, world!'
+
+  spam.isupper()    # False
+
+  spam.islower()    # True
+  ```
+
+  - Other noteworthy string methods beginning with the word `is`:
+
+    ```python
+    isalpha()     # (Letters only)
+
+    isalnum()     # (Letters and numbers only)
+
+    isdecimal()   # (Numbers only)
+
+    isspace()     # (Whitespace only)
+
+    istitle()     # (Titlecase only)
+    ```
+
+  - **NOTE:** Because string methods return a new string, you are able to **chain** method calls:
+
+    ```python
+    'hello'.upper().isupper()   # True
+    ```
+
+- The `startswith()` and `endswith()` methods return a Boolean value indicating whether the string starts with or ends with (respectively) the specified value:
+
+  ```python
+  spam = 'Hello, world!'
+
+  spam.startswith('Hello')   # True
+
+  spam.endswith('!')         # True
+
+  spam.endswith('world')     # False
+
+- The `join()` method takes all items in an iterable and joins them into one string using a specified separator:
+
+  ```python
+  spam = ['cats', 'rats', 'bats']
+
+  ', '.join(spam)   # 'cats, rats, bats'
+
+  '\n'.join(spam)   # (Inserts newline character after each item)
+  ```
+
+- The `split()` method splits a string into a list. The method splits a string according to whitespace separation by default; however, you can specify the string to be used as the separator (first parameter) and the number of splits to perform (second parameter):
+
+  ```python
+  spam = 'My name is Simon'
+
+  spam.split()          # ['My', 'name', 'is', 'Simon']
+
+  spam.split('m')       # ['My na', 'e is Si', 'on']
+
+  spam.split(None, 1)   # ['My', 'name is Simon']
+  ```
+
+- The `ljust()` and `rjust()` methods return a "padded" version of a string with a number of spaces (first parameter) inserted to left or right justify (respectively) the specified text. An optional second parameter can be used to specify a padding character other than a space. There is also a `center()` method that operates similarly to `ljust()` and `rjust()` but uses padding to center the text, rather than justify left or right:
+
+  ```python
+  'Hello'.ljust(10)         # 'Hello     '
+
+  'Hello'.rjust(10)         # '     Hello'
+
+  'Hello'.ljust(10, '.')    # 'Hello.....'
+
+  'Hello'.center(15, '-')   # '-----Hello-----'
+  ```
+- Use the `strip()`, `rstrip()`, and `lstrip()` methods to trim whitespace characters off of a string. You can insert a string as an argument, and any contiguous set of characters in that argument (regardless of order) will be stripped from the end(s) of the string:
+
+  ```python
+  '  -x-  '.strip()                         # 'x'
+
+  '  -x-  '.lstrip()                        # 'x   '
+
+  '  -x-  '.rstrip()                        # '   x'
+
+  'SpamBaconSpamEggsSpam'.strip('ampS')    # 'BaconSpamEggs'
+  ```
+
+- The `replace()` methods replaces a specified phrase with another specified phrase:
+
+  ```python
+  'Hello there!'.replace('e', '3')    # 'H3llo th3r3!'
+  ```
+
+### 8.21 - String Formatting
+
+- Rather than concatenating numerous strings with the `+` operator, you can use Python's **string formatting** (a.k.a., string interpolation) by using the `%` operator and the `%s` symbol (one of several types of conversion specifiers):
+
+  ```python
+  name = 'Alice'
+  place = 'Main Street'
+  time = '6:00 PM'
+  food = 'turnips'
+
+  'Hello, %s. You are invited to a party at %s at %s. Please bring %s.' % (name, place, time, food)
+
+  # 'Hello, Alice. You are invited to a party at Main Street at 6:00 PM. Please bring turnips.'
+  ```
+
+[Back to TOC](#id-toc)
+
+<div id='id-section9'/>
+
+## Section 9: Running Programs from the Command Line
+
+- See [Appendix B](https://automatetheboringstuff.com/appendixb/) re: shebang line (`#! /usr/bin/env python3`) and changing file permissions (`chmod +x pythonScript.py`)
+
+- To use arguments from the command line in your Python script, use the `sys.argv` list:
+
+  ```python
+  #! /usr/bin/env python3
+
+  import sys
+
+  print(sys.argv)
   ```
 
 [Back to TOC](#id-toc)
