@@ -1259,7 +1259,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
 #### findall() Method
 
-- If you want to return **every** occurrence of a regex pattern (rather than only the first), then use the `findall()` method (instead of `search()`) that will return a list value containing all matches:
+- If you want to return **every** occurrence of a regex pattern (rather than only the first), then use the `findall()` method (instead of `search()`) to return a list containing all matches:
 
   ```python
   import re
@@ -1371,7 +1371,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   endsWithWorldRegex = re.compile(r'world$')
 
-  endsWithWorldRegex.findall('Hello, world')         # ['world!']
+  endsWithWorldRegex.findall('Hello, world')          # ['world!']
 
   endsWithWorldRegex.findall('Hello, world!')         # []
 
@@ -1379,12 +1379,12 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   allDigitsRegex = re.compile(r'^\d+$')
 
-  allDigitsRegex.findall('1234567890')              # ['1234567890']
+  allDigitsRegex.findall('1234567890')                # ['1234567890']
 
-  allDigitsRegex.findall('12345x7890')              # []
+  allDigitsRegex.findall('12345x7890')                # []
   ```
 
-- The `.` (Dot) character matches **any** character except the newline character:
+- The `.` (dot) character matches **any** character except the newline character:
 
   ```python
   message = 'The cat in the hat sat on the flat mat.'
