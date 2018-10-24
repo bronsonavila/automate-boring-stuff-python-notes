@@ -16,6 +16,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 7: [Dictionaries](#id-section7)
 - Section 8: [More About Strings](#id-section8)
 - Section 9: [Running Programs from the Command Line](#id-section9)
+- Section 10: [Regular Expressions](#id-section10)
 
 <div id='id-section1'/>
 
@@ -1119,3 +1120,332 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   ```
 
 [Back to TOC](#id-toc)
+
+<div id='id-section10'/>
+
+## Section 10: Regular Expressions
+
+### 10.23 - Regular Expression Basics
+
+- Example of using regular expressions with the `re` module:
+
+  ```python
+  import re
+
+  message = 'Call me tomorrow at 415-555-1011, or at 415-555-9999.'
+
+  # "compile()" compiles a regex pattern into a regex object that can be used
+  # for matching via "match()", "search()", and other methods.  "\d" is the
+  # regex for a numeric digit character:
+
+  phoneNumRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+
+  # The regex data type has a "search()" method that can be used to search a
+  # string for the regex pattern and return a match object containing the first
+  # matching string:
+
+  matchObject = phoneNumRegex.search(message)
+
+  # Match objects have a method called "group()" that will return the text
+  # of the matching string:
+
+  print(matchObject.group())    # 415-555-1011
+  ```
+
+  - **NOTE:** If the `search()` method does not find a match, it will return a value of `None`, which will cause an error to result if you call the `group()` method on a nonexistent match object.
+
+### 10.24 - Regex Groups and the Pipe Character
+
+- Use **parentheses** to mark out groups within a regex, and access groups via the `group()` method:
+
+  ```python
+  import re
+
+  phoneNumRegex = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
+
+  matchObject = phoneNumRegex.search('My number is 415-555-4242.')
+
+  matchObject.group(1)    # '415'
+
+  matchObject.group(2)    # '555-4242'
+  ```
+
+  - **NOTE:** If you want to find literal parentheses (or any other regex special characters) within your text, then you must escape the opening and closing parentheses with a backslash (`\`):
+
+    ```python
+    phoneNumRegex = re.compile(r'\(\d\d\d\) \d\d\d-\d\d\d\d')
+    ```
+
+- Use the **pipe** (`|`) character to match one of many possible groups (based on, e.g., prefix/suffix):
+
+  ```python
+  batRegex = re.compile(r'Bat(man|mobile|copter)')
+
+  matchObject = batRegex.search('Batmobile lost a wheel')
+
+  matchObject.group()     # 'Batmobile'
+
+  matchObject.group(1)    # 'mobile'
+  ```
+
+### 10.25 - Repetition in Regex Patterns and Greedy/Nongreedy Matching
+
+- The `?` character matches the preceding expression **0 or 1** time (i.e., the expression can either appear once or not at all for a match to occur):
+
+  ```python
+  import re
+
+  # Matches 'Batman' or 'Batwoman':
+
+  batRegex = re.compile(r'Bat(wo)?man')
+  ```
+
+- The `*` character matches the preceding expression **0 or more** times:
+
+  ```python
+  batRegex = re.compile(r'Bat(wo)*man')
+
+  matchObject = batRegex.search('The Adventures of Batwowowoman')
+
+  matchObject.group()   # 'Batwowowoman'
+  ```
+
+- The `+` character matches the preceding expression **1 or more** times:
+
+  ```python
+  # Matches 'Batwoman' or 'Batwowowoman', etc., but not 'Batman':
+
+  batRegex = re.compile(r'Bat(wo)+man')
+  ```
+
+- The `{`*`n`*`}` character matches **exactly** *n* occurrences of the preceding expression:
+
+  ```python
+  haRegex = re.compile(r'(ha){3}')
+
+  matchObject = haRegex.search('He said, "hahaha"')
+
+  matchObject.group()   # 'hahaha'
+  ```
+
+- The `{`*`n,m`*`}` character matches at least *n* and at most *m* occurrences of the preceding expression (if *n* is omitted, it is treated as 0; if *m* is omitted, it is treated as ∞):
+
+  ```python
+  haRegex = re.compile(r'(ha){3,5}')
+
+  haMatchObject = haRegex.search('He said, "hahahaha"')
+
+  haMatchObject.group()     # 'hahahaha'
+
+  # By default, Python will perform a "greedy" match and return the longest
+  # possible match that it finds (in this case, 5 digits rather than 3):
+
+  digitRegex = re.compile(r'(\d){3,5}')
+
+  digitMatchObject = digitRegex.search('1234567890')
+
+  digitMatchObject.group()    # '12345'
+
+  # To perform a "nongreedy" match, use the "?" character after the curly brace:
+
+  digitRegex = re.compile(r'(\d){3,5}?')
+
+  digitMatchObject = digitRegex.search('1234567890')
+
+  digitMatchObject.group()    # '123'
+  ```
+
+### 10.26 - Regex Character Classes and the findall() Method
+
+#### findall() Method
+
+- If you want to return **every** occurrence of a regex pattern (rather than only the first), then use the `findall()` method (instead of `search()`) that will return a list value containing all matches:
+
+  ```python
+  import re
+
+  message = 'Call me tomorrow at 415-555-1011, or at 415-555-9999.'
+
+  phoneNumRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+
+  print(phoneNumRegex.findall(message))   # ['415-555-1011', '415-555-9999']
+  ```
+
+- Be mindful of how **groups** affect the value returned by the `findall()` method:
+
+  ```python
+  message = 'Call me tomorrow at 415-555-1011, or at 415-555-9999.'
+
+
+
+  twoGroups = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
+
+  twoGroups.findall(message)      # [('415', '555-1011'), ('415', '555-9999')]
+
+
+
+  threeGroups = re.compile(r'((\d\d\d)-(\d\d\d-\d\d\d\d))')
+
+  threeGroups.findall(message)    # [('415-555-1011', '415', '555-1011'),
+                                  # ('415-555-9999', '415', '555-9999')]
+  ```
+
+#### Character Classes
+
+- Common Character Classes:
+
+  | Shorthand character class | Represents                                                          |
+  | :-----------------------: | ------------------------------------------------------------------- |
+  | \d                        | Any numeric digit from 0 to 9                                       |
+  | \D                        | Any character that is *not* a numeric digit from 0 to 9             |
+  | \w                        | Any letter, numeric digit, or underscore (i.e., "word" characters)  |
+  | \W                        | Any character that is *not* a letter, numeric digit, or underscore  |
+  | \s                        | Any space, tab, or newline character (i.e., "space" characters)     |
+  | \S                        | Any character that is *not* a space, tab, or newline                |
+
+- Example:
+
+  ```python
+  lyrics = """12 drummers drumming, 11 pipers piping, 10 lords a leaping,
+              9 ladies dancing, 8 maids a milking, 7 swans a swimming,
+              6 geese a laying, 5 golden rings, 4 calling birds, 3 french hens,
+              2 turtle doves, 1 partridge in a pear tree"""
+
+  xmasRegex = re.compile(r'\d+\s\w+')
+
+  xmasRegex.findall(lyrics)   # ['12 drummers', '11 pipers', '10 lords',
+                              # '9 ladies', '8 maids', '7 swans',
+                              # '6 geese', '5 golden', '4 calling',
+                              # '3 french', '2 turtle', '1 partridge']
+  ```
+
+- You can create your own regex **character sets** (e.g., `[xyz]`) and **negated or complemented character sets** (e.g., `[^xyz]`):
+
+  ```python
+  message = 'Robocop eats baby food.'
+
+  # Matches all letters:
+
+  alphaRegex = re.compile(r'[a-zA-Z]')
+
+  alphaRegex.findall(message)         # ['R', 'o', 'b', 'o', 'c', 'o', 'p',
+                                      # 'e', 'a', 't', 's', 'b', 'a', 'b', 'y',
+                                      # 'f', 'o', 'o', 'd']
+
+  # Matches all vowels:
+
+  vowelRegex = re.compile(r'[aeiouAEIOU]')
+
+  vowelRegex.findall(message)         # ['o', 'o', 'o', 'e', 'a', 'a', 'o', 'o']
+
+  # Matches all vowels appearing in sets of 2:
+
+  doubleVowelRegex = re.compile(r'[aeiouAEIOU]{2}')
+
+  doubleVowelRegex.findall(message)   # ['ea', 'oo']
+
+  # Matches anything that is NOT enclosed in the brackets:
+
+  nonVowelRegex = re.compile(r'[^aeiouAEIOU]')
+
+  nonVowelRegex.findall(message)      # ['R', 'b', 'c', 'p', ' ', 't', 's', ' ',
+                                      # 'b', 'b', 'y', ' ', 'f', 'd', '.']
+  ```
+
+### 10.27 - Regex Dot-Star and the Caret/Dollar Characters
+
+- Use the `^` character (not as a first character in a character set) to find a match at the **beginning** of an input, and use the `$` character to find a match at the **end** of an input:
+
+  ```python
+  import re
+
+  # Begins with 'Hello':
+
+  beginsWithHelloRegex = re.compile(r'^Hello')
+
+  beginsWithHelloRegex.findall('Hello there!')        # ['Hello']
+
+  beginsWithHelloRegex.findall('He said, "Hello".')   # []
+
+  # Ends with 'world':
+
+  endsWithWorldRegex = re.compile(r'world$')
+
+  endsWithWorldRegex.findall('Hello, world')         # ['world!']
+
+  endsWithWorldRegex.findall('Hello, world!')         # []
+
+  # Only contains one or more numeric digits:
+
+  allDigitsRegex = re.compile(r'^\d+$')
+
+  allDigitsRegex.findall('1234567890')              # ['1234567890']
+
+  allDigitsRegex.findall('12345x7890')              # []
+  ```
+
+- The `.` (Dot) character matches **any** character except the newline character:
+
+  ```python
+  message = 'The cat in the hat sat on the flat mat.'
+
+  # Matches a phrase that ends in 'at' preceded by 1-2 non-newline characters:
+
+  atRegex = re.compile(r'.{1,2}at')
+
+  # Includes spaces:
+
+  atRegex.findall(message)    # ' cat', ' hat', ' sat', 'flat', ' mat']
+  ```
+
+  - **NOTE:** To make `.` truly match **every** character (even newlines), pass the `re.DOTALL` variable as the second argument in the `compile()` function:
+
+    ```python
+    primeDirectives = 'Serve the public trust.\nProtect the innocent.\nUphold the law.'
+
+    dotStar = re.compile(r'.*', re.DOTALL)
+
+    matchObject = dotStar.search(primeDirectives)
+
+    print(matchObject.group())    # Serve the public trust.
+                                  # Protect the innocent.
+                                  # Uphold the law.
+    ```
+
+  - **ALSO:** If you want to have a **case-insensitive** regex match, use the `re.IGNORECASE` variable:
+
+    ```python
+    # TIP: You can also use "re.I" as a shorthand for "re.IGNORECASE':
+
+    vowelRegex = re.compile(r'[aeiou]', re.IGNORECASE)
+
+    vowelRegex.findall('All cows eat grass.')    # ['A', 'o', 'e', 'a', 'a']
+    ```
+
+- Common way to match anything is the **Dot-Star** pattern:
+
+  ```python
+  text = 'First Name: Al Last Name: Sweigart'
+
+  nameRegex = re.compile(r'First Name: (.*) Last Name: (.*)')
+
+  nameRegex.findall(text)   # [('Al', 'Sweigart')]
+  ```
+
+  - **NOTE:** Dot-Star uses greedy mode by default, so you must use `(.*?)` for nongreedy matching:
+
+    ```python
+    serve = '<To serve humans> for dinner.>'
+
+    # Nongreedy matching:
+
+    nongreedy = re.compile(r'<(.*?)>')
+
+    nongreedy.findall(serve)    # ['To serve humans']
+
+    # Greedy matching:
+
+    greedy = re.compile(r'<(.*)>')
+
+    greedy.findall(serve)       # ['To serve humans> for dinner.']
+    ```
