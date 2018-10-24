@@ -1276,18 +1276,24 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   ```python
   message = 'Call me tomorrow at 415-555-1011, or at 415-555-9999.'
 
+  # One group:
 
+  single = re.compile(r'(\d\d\d)-\d\d\d-\d\d\d\d')
 
-  twoGroups = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
+  single.findall(message)   # ['415', '415']
 
-  twoGroups.findall(message)      # [('415', '555-1011'), ('415', '555-9999')]
+  # Two groups:
 
+  tuples = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
 
+  tuples.findall(message)   # [('415', '555-1011'), ('415', '555-9999')]
 
-  threeGroups = re.compile(r'((\d\d\d)-(\d\d\d-\d\d\d\d))')
+  # Two groups nested within one group:
 
-  threeGroups.findall(message)    # [('415-555-1011', '415', '555-1011'),
-                                  # ('415-555-9999', '415', '555-9999')]
+  nested = re.compile(r'((\d\d\d)-(\d\d\d-\d\d\d\d))')
+
+  nested.findall(message)   # [('415-555-1011', '415', '555-1011'),
+                            # ('415-555-9999', '415', '555-9999')]
   ```
 
 #### Character Classes
@@ -1449,3 +1455,62 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
     greedy.findall(serve)       # ['To serve humans> for dinner.']
     ```
+
+### 10.28 - Regex sub() Method and Verbose Mode
+
+#### sub() Method
+
+- The `sub()` method allows you to find matching text and replace it with new text:
+
+  ```python
+  import re
+
+  message = 'Agent Alice gave documents to Agent Bob.'
+
+  namesRegex = re.compile(r'Agent \w+')
+
+  # The first argument is the replacement string, and
+  # the second argument is the string to be searched:
+
+  namesRegex.sub('REDACTED', message)   # 'REDACTED gave documents to REDACTED.'
+  ```
+
+- You can retain portions of the original text by using the **Slash-Number** syntax (e.g., `\1`, `\2`, etc.), in which the number represents a group in the regex pattern:
+
+  ```python
+  message = 'Agent Alice gave documents to Agent Bob.'
+
+  # The group will contain the first letter of an agent's name:
+
+  namesRegex = re.compile(r'Agent (\w)\w*')
+
+  namesRegex.findall(message)   # ['A', 'B']
+
+  # Use the text from "Group 1" for the substituted match:
+
+  namesRegex.sub(r'Agent \1', message)   # 'Agent A gave documents to Agent B.'
+  ```
+
+#### Verbose Mode
+
+- The `re.VERBOSE` flag allows you to write regular expressions that look nicer and are more readable by allowing you to visually separate logical sections of the pattern and add comments. Whitespace within the pattern is generally ignored:
+
+  ```python
+  message = 'Call me tomorrow at 415-555-1011, or at (415) 555-9999.'
+
+  # TIP: You can combine "compile()" options by using the bitwise "|" operator:
+
+  phoneRegex = re.compile(r'''
+  (((\d\d\d-)|      # Area code (without parentheses; with dash)
+  (\(\d\d\d\)\s))   # -OR- Area code (with parentheses; without dash)
+  \d\d\d            # First 3 digits
+  -                 # Second dash
+  \d\d\d\d)         # Last 4 digits
+  ''', re.VERBOSE | re.I | re.DOTALL)   # Added extra options for demonstration
+
+  phoneRegex.findall(message)[0][0]     # '415-555-1011'
+
+  phoneRegex.findall(message)[1][0]     # '(415) 555-9999'
+  ```
+
+[Back to TOC](#id-toc)
