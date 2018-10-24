@@ -17,6 +17,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 8: [More About Strings](#id-section8)
 - Section 9: [Running Programs from the Command Line](#id-section9)
 - Section 10: [Regular Expressions](#id-section10)
+- Section 11: [Files](#id-section11)
 
 <div id='id-section1'/>
 
@@ -1514,3 +1515,94 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   ```
 
 [Back to TOC](#id-toc)
+
+<div id='id-section11'/>
+
+## Section 11: Files
+
+### 11.30 - Filenames and Absolute/Relative File Paths
+
+- File paths are handled differently with regard to slashes/backslashes on Windows (e.g., `C:\temp\new`) and Mac/Linux (e.g., `C:/temp/new`). To enforce consistency when creating a file path string in Python, use the `os` module's `path.join()` method:
+
+  ```python
+  import os
+
+  # Returns 'folder1\\folder2\\file.png' if run on Windows, and
+  # returns 'folder1/folder2/file.png' if run on Mac/Linux:
+
+  os.path.join('folder1', 'folder2', 'file.png')
+  ```
+
+- To retrieve the string value of the file's **current working directory** (CWD), use the `os.getcwd()` method. You can manually change what Python considers the CWD to be by using `os.chdir()`:
+
+  ```python
+  os.getcwd()   # '/Users/Guest/Desktop'
+
+  oc.chdir('/Users/Guest/Documents')
+
+  os.getcwd()   # '/Users/Guest/Documents'
+  ```
+
+- Being able to modify the CWD is important for handling **relative file paths**. A file referenced by name only (e.g., `file.png`) will be considered to be within the CWD, whereas a file name that is part of an **absolute file path** (e.g., `/Users/Guest/Documents/file.png`) is known to be within the path specified.
+
+  - **NOTE:** Relative file paths can also contain references to folders, not just file names.
+
+- To return an absolute file path derived from a non-absolute pathname, use `os.path.abspath()`:
+
+  ```python
+  # Essentially calls "os.getcwd()" and appends the string argument:
+
+  os.path.abspath('spam.png')       # '/Users/Guest/Documents/spam.png'
+
+  # You can use the ".." symbol to move to a higher folder in the CWD:
+
+  os.path.abspath('../spam.png')    # '/Users/Guest/spam.png'
+  ```
+
+  - **TIP:** You can determine whether a path is relative or absolute by using the `os.path.isabs()`, which returns a Boolean value:
+
+    ```python
+    os.path.isabs('../spam.png')              # False
+
+    os.path.isabs('/Users/Guest/Documents')   # True
+    ```
+
+- To find the relative path between two paths, use `os.path.relpath()`. The first argument is the destination path, and the second (optional) argument is the starting path (which defaults to the current directory if not specified):
+
+  ```python
+  os.path.relpath('/Users/Guest/spam.png', '/Users')    # '/Guest/spam.png'
+  ```
+
+- Use `os.path.dirname()` to retrieve only the directory in which a file is located, and use `os.path.basename()` to retrieve only the endpoint of a path:
+
+  ```python
+  os.path.dirname('/Users/Guest/spam.png')    # '/Users/Guest'
+
+  os.path.basename('/Users/Guest/spam.png')   # 'spam.png'
+
+  os.path.basename('/Users/Guest')            # 'Guest'
+  ```
+
+- To determine whether a file or path exists, use `os.path.exists()`, which returns a Boolean value:
+
+  ```python
+  os.path.exists('/Users/Guest')    # True
+  ```
+
+  - **ALSO:** Use `os.path.isfile()` and `os.path.isdir()` to determine whether a path is referencing a file or directory, respectively (returns a Boolean value).
+
+- Other useful functions for **examining/modifying** directories include `os.path.getsize()`, `os.listdir()`, and `os.makedirs()`:
+
+  ```python
+  # Returns a directory's or file's size in bytes (as an integer):
+
+  os.path.getsize('/Users/Guest')   # 384
+
+  # Returns the contents of a directory:
+
+  os.listdir('/Users/Guest')
+
+  # Creates a new folder (accepts either absolute or relative file paths):
+
+  os.makedirs('/Users/Guest/Delicious/Waffles')
+  ```
