@@ -1395,7 +1395,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   # Includes spaces:
 
-  atRegex.findall(message)    # ' cat', ' hat', ' sat', 'flat', ' mat']
+  atRegex.findall(message)    # [' cat', ' hat', ' sat', 'flat', ' mat']
   ```
 
   - **NOTE:** To make `.` truly match **every** character (even newlines), pass the `re.DOTALL` variable as the second argument in the `compile()` function:
