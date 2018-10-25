@@ -2064,27 +2064,27 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   ```python
   browser.get('https://www.google.com/')
 
-  # Targets Google's search bar:
+  # Target Google's search bar:
 
   searchInput = browser.find_element_by_css_selector(
       '#tsf > div:nth-child(2) > div > div.RNNXgb > div > div.a4bIc > input'
   )
 
-  # "send_keys()" enters its string argument into the search input:
+  # Enter the given string argument into the search input:
 
   searchInput.send_keys('python')
 
-  # Fires the submit associated with the search input:
+  # Fire the submit action associated with the search input:
 
   searchInput.submit()
 
-  # Targets a specific <span> element on the web page (i.e., the first result):
+  # Target a specific <span> element on the web page (i.e., the first result):
 
   snippet = browser.find_element_by_css_selector(
       '#rso > div:nth-child(1) > div > div > div > div > div.s > div > span'
   )
 
-  # Displays the targeted element's inner text content:
+  # Display the targeted element's inner text content:
 
   snippet.text    # 'The official home of the Python Programming Language.'
   ```
