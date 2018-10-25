@@ -177,18 +177,18 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   # below the conditional statement will run, and the "else" block is skipped:
 
   if answer < 42:
-    print('Too low')
+      print('Too low')
 
   # If the preceding "if" statement (or "elif" statement) is false, then the
   # subsequent "elif" statement will be evaluated:
 
   elif answer > 42:
-    print('Too high')
+      print('Too high')
 
   # If all prior conditional statements are false, the "else" block will run:
 
   else:
-    print('Correct')
+      print('Correct')
   ```
 
   - **NOTE:** New "blocks" are designated by increasing indentation and begin only after statements that end with a colon (`:`).
@@ -465,7 +465,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   ```python
   def div42by(divideBy):
-    return 42 / divideBy
+      return 42 / divideBy
 
   print(div42by(2))     # 21.0
   print(div42by(0))     # (Will crash the application)
@@ -476,10 +476,10 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   ```python
   def div42by(divideBy):
-    try:
-        return 42 / divideBy
-    except ZeroDivisionError:
-        print('Error: You tried to divide by zero.')
+      try:
+          return 42 / divideBy
+      except ZeroDivisionError:
+          print('Error: You tried to divide by zero.')
 
   print(div42by(2))     # 21.0
   print(div42by(0))     # 'Error: You tried to divide by zero.'
@@ -667,7 +667,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   spam.index('hi')    # 1
 
-  spam.index('hey')    # (Raises an exception if value not found)
+  spam.index('hey')   # (Raises an exception if value not found)
   ```
 
 - The `append()` method appends an item to the end of the list:
@@ -1073,13 +1073,13 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Use the `strip()`, `rstrip()`, and `lstrip()` methods to trim whitespace characters off of a string. You can insert a string as an argument, and any contiguous set of characters in that argument (regardless of order) will be stripped from the end(s) of the string:
 
   ```python
-  '  -x-  '.strip()                         # 'x'
+  '  -x-  '.strip()                       # 'x'
 
-  '  -x-  '.lstrip()                        # 'x   '
+  '  -x-  '.lstrip()                      # 'x   '
 
-  '  -x-  '.rstrip()                        # '   x'
+  '  -x-  '.rstrip()                      # '   x'
 
-  'SpamBaconSpamEggsSpam'.strip('ampS')    # 'BaconSpamEggs'
+  'SpamBaconSpamEggsSpam'.strip('ampS')   # 'BaconSpamEggs'
   ```
 
 - The `replace()` methods replaces a specified phrase with another specified phrase:
@@ -1813,7 +1813,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
         print('The traceback info was written to error-log.txt')
     ```
 
-- An **assertion** can be used to perform a "sanity check". See the following example of a traffic light simulator:
+- An **assertion** can be used to perform a "sanity check". They are intended to address programmer errors rather than user errors. See the following example of a traffic light simulator:
 
   ```python
   mainStreet = {'ns': 'green', 'ew': 'red'}
