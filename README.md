@@ -19,6 +19,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 10: [Regular Expressions](#id-section10)
 - Section 11: [Files](#id-section11)
 - Section 12: [Debugging](#id-section12)
+- Section 13: [Web Scraping](#id-section13)
 
 <div id='id-section1'/>
 
@@ -430,13 +431,13 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
 - Key Points:
 
-  1.  Code in the global scope cannot use any local variables.
+  **1**\.  Code in the global scope cannot use any local variables.
 
-  2.  Code in a local scope can access global variables.
+  **2**\.  Code in a local scope can access global variables.
 
-  3.  Code in one function's local scope cannot use variables in another local scope.
+  **3**\.  Code in one function's local scope cannot use variables in another local scope.
 
-  4.  You can use the same name for different variables if they are in different scopes.
+  **4**\.  You can use the same name for different variables if they are in different scopes.
 
 - If you want to reassign the value of a global variable (e.g. `eggs = 42`) from within a local scope, you cannot simply say `eggs = 'Hello'`, as this will merely create a local variable named "eggs" within the local scope. Rather, you must use a `global` statement:
 
@@ -1908,11 +1909,11 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
 - The debugger is a feature in IDLE that allows you to run your program one line at a time. To activate the deubgger:
 
-  1.  Go to `Debug > Debugger` in the IDLE menu bar.
+  **1**\.  Go to `Debug > Debugger` in the IDLE menu bar.
 
-  2.  Ensure that the `Stack`, `Source`, `Locals`, and `Globals` checkboxes are all checked (to show the most information).
+  **2**\.  Ensure that the `Stack`, `Source`, `Locals`, and `Globals` checkboxes are all checked (to show the most information).
 
-  3.  Run your program with the debugger enabled. The execution should pause on the first line.
+  **3**\.  Run your program with the debugger enabled. The execution should pause on the first line.
 
 - Use the following controls to navigate through your code with the dugger:
 
@@ -1927,5 +1928,165 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   - `Step` ("Step Into") moves the debugger inside of a function call (if a function is about to be executed).
 
   - `Out` ("Step Out") will keep executing lines within the current function until the function returns.
+
+[Back to TOC](#id-toc)
+
+<div id='id-section13'/>
+
+## Section 13: Web Scraping
+
+### 13.38 - The webbrowser Module
+
+- The `webbrowser` module's `open()` function launches a new browser to a specified URL:
+
+  ```python
+  import webbrowser
+
+  webbrowser.open('https://automatetheboringstuff.com')
+  ```
+
+### 13.39 - Downloading from the Web with the requests Module
+
+- The [requests](https://requests.readthedocs.io/en/master/) module is a third-party module that allows you to send HTTP/1.1 requests.
+
+  ```python
+  import requests
+
+  # "get()" returns a response object received from the server:
+
+  res = requests.get('http://nunit.org/nuget/nunit3-license.txt')
+
+  res.status_code   # (Displays the response status code, e.g., 200)
+
+  res.text          # (Displays the body of the text content)
+
+  # "raise_for_status()" will raise an exception if a download error occurred:
+
+  res.raise_for_status()
+
+  # To save the file to your storage device, use then "open()" function in
+  # Write-Binary mode by passing "wb" as the second argument. (NOTE: Even if the
+  # downloaded page is in plaintext, you must still write binary data--rather
+  # than plaintext data--in order to maintain the Unicode encoding of the text):
+
+  licenseFile = open('license.txt', 'wb')
+
+  # Write the file by using a for loop with the "iter_content()" method. Files
+  # are written in "chunks" (of the "bytes" data type), and you can specify the
+  # size of each chunk via the "chunk_size" keyword argument (first parameter).
+  # (NOTE: Per the "requests" documentation, 128 is the recommended size when
+  # streaming a download; however, this value may be modified as necessary):
+
+  for chunk in res.iter_content(128):
+      licenseFile.write(chunk)    # (Will return an integer of bytes written)
+
+  licenseFile.close()
+  ```
+
+    - **NOTE:** See [here](https://nedbatchelder.com/text/unipain.html) for more information on Python and Unicode.
+
+### 13.40 - Parsing HTML with the Beautiful Soup Module
+
+- To locate specific HTML elements within an HTML file, you can parse the HTML by using the Beautiful Soup ([beautifulsoup4](https://pypi.org/project/beautifulsoup4/)) third-party module:
+
+  ```python
+  import bs4
+  import requests
+
+  # Request an HTML page:
+
+  res = requests.get('https://www.amazon.com/dp/1593275994/')
+
+  # "BeautifulSoup()" will return a "beautifulsoup" object. The first argument
+  # is the content to be parsed, and the second argument is the type of parser
+  # you want to use (in this case, HTML):
+
+  soup = bs4.BeautifulSoup(res.text, 'html.parser')
+
+  # "select()" takes in a string containing the CSS selector you are seeking,
+  # and it will return a list of all matching elements. In this case, there
+  # will be only one matching element, so it will return a list containing a
+  # single <span> tag for the "header-price" from the requested Amazon page:
+
+  elements = soup.select(
+      """#newOfferAccordionRow > div > div.a-accordion-row-a11y > a > h5 >
+      div > div.a-column.a-span4.a-text-right.a-span-last >
+      span.a-size-medium.a-color-price.header-price"""
+  )
+
+  # Access a matching element's internal text content (e.g., just the contents
+  # of a <span>, not the opening/closing tags) via the "text" variable:
+
+  elements[0].text    # (Includes the price and newline/whitespace characters)
+
+  elements[0].text.strip()    # (Includes only the price)
+  ```
+
+### 13.41 - Controlling the Browser with the Selenium Module
+
+- If you need to parse information from a website that requires you to log in or requires some user interaction with JavaScript, then using Beautiful Soup alone will not be sufficient (as you will have to do more than just download an HTML page). To solve such problems, the [Selenium](https://www.seleniumhq.org/) third-party module can be used to launch a browser that can be programmatically controlled by Python:
+
+  ```python
+  # Unique way to import Selenium:
+
+  from selenium import webdriver
+
+  # Set the path of your Chrome driver (http://chromedriver.chromium.org/):
+
+  chromeDriverPath = '/Users/bronson/Selenium Drivers/chromedriver'
+
+  # Open a new Chrome browser that will be controlled by the automated process:
+
+  browser = webdriver.Chrome(chromeDriverPath)
+
+  # Direct the automated browser to fetch the requested URL:
+
+  browser.get('https://automatetheboringstuff.com')
+
+  # Target a SINGLE element containing a hyperlink to be clicked:
+
+  element = browser.find_element_by_css_selector(
+      """body > div.main > div:nth-child(1) >
+      ul:nth-child(18) > li:nth-child(1) > a"""
+  )
+
+  # "click()" method automates the process of a clicking a hyperlink:
+
+  element.click()
+  ```
+
+    - **NOTE:** Use `find_elements_by_css_selector()` (plural) to fetch a list of **all** matching elements. Other elements that can be targeted with the `find_element_by_` syntax include: `class_name`, `id`, `link_text` (complete match), `partial_link_text` (partial match), `name`, and `tag_name`.
+
+    - **ALSO:** Other browser **nagivation** methods include: `back()`, `forward()`, `refresh()`, and `quit()`.
+
+- Use the `send_keys()` and `submit()` methods to enter text and **submit input**, and use an element's `text` variable to **read** the content of an HTML element:
+
+  ```python
+  browser.get('https://www.google.com/')
+
+  # Targets Google's search bar:
+
+  searchInput = browser.find_element_by_css_selector(
+      '#tsf > div:nth-child(2) > div > div.RNNXgb > div > div.a4bIc > input'
+  )
+
+  # "send_keys()" enters its string argument into the search input:
+
+  searchInput.send_keys('python')
+
+  # Fires the submit associated with the search input:
+
+  searchInput.submit()
+
+  # Targets a specific <span> element on the web page (i.e., the first result):
+
+  snippet = browser.find_element_by_css_selector(
+      '#rso > div:nth-child(1) > div > div > div > div > div.s > div > span'
+  )
+
+  # Displays the targeted element's inner text content:
+
+  snippet.text    # 'The official home of the Python Programming Language.'
+  ```
 
 [Back to TOC](#id-toc)
