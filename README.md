@@ -391,7 +391,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   - **NOTE:** If the value returned is considered "empty" (or if the return statement is omitted entirely), Python still returns a value called `None` (i.e., a value that represents a lack of a value). The `None` value will not be visibly displayed in the console.
 
-- Some functions accept **Keyword Arguments**, which are used as optional arguments to pass to a function call. For example, the `print()` function adds a newline character by default to the end of the string it prints. However, this behavior can be modified by changing the value of `end` keyword argument:
+- Some functions accept **keyword arguments**, which are used as optional arguments to pass to a function call. For example, the `print()` function adds a newline character by default to the end of the string it prints. However, this behavior can be modified by changing the value of `end` keyword argument:
 
   ```python
   # Prints "Hello" and "World" on two separate lines:
@@ -419,7 +419,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
 ### 3.10 - Global and Local Scopes
 
-- Variables inside of a function can have the same name as variables outside of the function, but they are considered two separate variables due to scope. Variables defined in a function belong to that function's **Local Scope**, whereas all variables defined outside of functions belong to the application's **Global Scope**:
+- Variables inside of a function can have the same name as variables outside of the function, but they are considered two separate variables due to scope. Variables defined in a function belong to that function's **local scope**, whereas all variables defined outside of functions belong to the application's **global scope**:
 
   ```python
   spam = 42       # Global variable
@@ -616,7 +616,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
     # Index 2 in supplies is: binders
     ```
 
-- You can use Python's **Multiple Assignments** feature to iterate over a list and assign each item's value to a variable:
+- You can use Python's **multiple assignments** feature to iterate over a list and assign each item's value to a variable:
 
   ```python
   cat = ['fat', 'orange', 'loud']
@@ -742,7 +742,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
 ### 6.16 - Similarities Between Lists and Strings
 
-- A string is essentially a list of single character strings (which is why `list()` can accept a string as an argument). However, they are significantly different in the sense that a list is a **Mutable** data type (i.e., it can have values added, moved, or changed), whereas a string is an **Immutable** data type (i.e., its value cannot be changed). Because strings are immutable, the proper way to create a new string derived from an existing variable is by using **slices**:
+- A string is essentially a list of single character strings (which is why `list()` can accept a string as an argument). However, they are significantly different in the sense that a list is a **mutable** data type (i.e., it can have values added, moved, or changed), whereas a string is an **immutable** data type (i.e., its value cannot be changed). Because strings are immutable, the proper way to create a new string derived from an existing variable is by using **slices**:
 
   ```python
   name = 'Zophie a cat'
@@ -1831,9 +1831,75 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
       # 'False' on the second run, in which the N/S light will be 'yellow' and the
       # E/W light will be 'green'. As traffic should only be flowing when one
       # light on the intersection is 'red', the assert statement allows you to
-      # immediately detect the problem:
+      # immediately detect the problem and take corrective action:
       assert 'red' in intersection.values(), 'Neither light is red!' + str(intersection)
 
 
   switchLights(mainStreet)
+  ```
+
+### 12.36 - Logging
+
+- Python's `logging` module allows you to create a record of custom messages. Use the `logging.basicConfig()` method to display log messages on your screen while the program runs:
+
+  ```python
+  import logging
+
+  # The following line should appear at or near the top of your program:
+
+  logging.basicConfig(
+      level=logging.DEBUG,
+      format='%(asctime)s - %(levelname)s - %(message)s'
+  )
+
+  # Each of the following "debug()" function calls work like "print()" but
+  # provide additional information (i.e., timestamp, log level, and custom message):
+
+  logging.debug('Start of program')
+
+  def factorial(n):
+      logging.debug('Start of factorial(%s)' % (n))
+      total = 1
+      for i in range(n + 1):
+          total *= i
+          logging.debug('i is %s, total is %s' % (i, total))
+      logging.debug('Return value is %s' % (total))
+      return total
+
+  print(factorial(5))   # (Returns 0, which is incorrect)
+
+  logging.debug('End of program')
+
+  # In this example, the running log will show that "i" is set to 0 on the first
+  # iteration, which results in "total" being set to 0 because any amount
+  # times 0 is always equal to 0. Therefore, by reviewing the log, it becomes
+  # apparent that the "range()" value should be set to start at 1 rather than 0.
+  ```
+
+- To **disable** logging messages that are present in your code, use the `logging.disable()` method at the top of your code:
+
+  ```python
+  # Disables logging calls of the given severity level (or lower):
+
+  logging.disable(logging.CRITICAL)
+  ```
+
+  - **NOTE:** Python recognizes the following 5 [logging levels](https://docs.python.org/3/library/logging.html#levels) (in descending order of severity). Log messages can be created at a specific log level by using the corresponding logging method:
+
+    | Log level | Logging method       |
+    | --------- | -------------------- |
+    | CRITICAL  | `logging.critical()` |
+    | ERROR     | `logging.error()`    |
+    | WARNING   | `logging.warning()`  |
+    | INFO      | `logging.info()`     |
+    | DEBUG     | `logging.debug()`    |
+
+- To log messages to a **plaintext file** rather than the screen, use the `filename` keyword argument in the `logging.basicConfig()` method:
+
+  ```python
+  logging.basicConfig(
+      filename='myProgramLog.txt'   # (Relative pathname)
+      level=logging.DEBUG,
+      format='%(asctime)s - %(levelname)s - %(message)s'
+  )
   ```
