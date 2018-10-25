@@ -19,7 +19,6 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 10: [Regular Expressions](#id-section10)
 - Section 11: [Files](#id-section11)
 - Section 12: [Debugging](#id-section12)
-- Section 13: [Web Scraping](#id-section13)
 
 <div id='id-section1'/>
 
