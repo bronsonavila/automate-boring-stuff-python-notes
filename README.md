@@ -19,6 +19,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 10: [Regular Expressions](#id-section10)
 - Section 11: [Files](#id-section11)
 - Section 12: [Debugging](#id-section12)
+- Section 13: [Web Scraping](#id-section13)
 
 <div id='id-section1'/>
 
@@ -1903,3 +1904,29 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
       format='%(asctime)s - %(levelname)s - %(message)s'
   )
   ```
+
+### 12.37 - Using the Debugger
+
+- The debugger is a feature in IDLE that allows you to run your program one line at a time. To activate the deubgger:
+
+  1.  Go to `Debug > Debugger` in the IDLE menu bar.
+
+  2.  Ensure that the `Stack`, `Source`, `Locals`, and `Globals` checkboxes are all checked (to show the most information).
+
+  3.  Run your program with the debugger enabled. The execution should pause on the first line.
+
+- Use the following controls to navigate through your code with the dugger:
+
+  - `Over` ("Step Over") executes the line of code that appears highlighted in the shell, and then proceeds to execute the next line (basically allows you to execute a single line of code at a time).
+
+    - **NOTE:** During this process, any variables that are set or modified will be displayed in the `Locals` and `Globals` boxes.
+
+  - `Go` runs the program normally and disables the debugger until reaching (1) the end of the program or (2) a **breakpoint**.
+
+    - To set a breakpoint in IDLE's file editor, right click the line at which you want to set a breakpoint and click `Set Breakpoint`.
+
+  - `Step` ("Step Into") moves the debugger inside of a function call (if a function is about to be executed).
+
+  - `Out` ("Step Out") will keep executing lines within the current function until the function returns.
+
+[Back to TOC](#id-toc)
