@@ -1763,7 +1763,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   send2trash.send2trash('/Users/Guest/Delicious/eggs.txt')
   ```
 
-### 11-34 - Walking a Directory Tree
+### 11.34 - Walking a Directory Tree
 
 - The `os.walk()` method allows you to iterate through and execute code upon all of the files or folders within a specified folder:
 
