@@ -18,6 +18,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 9: [Running Programs from the Command Line](#id-section9)
 - Section 10: [Regular Expressions](#id-section10)
 - Section 11: [Files](#id-section11)
+- Section 12: [Debugging](#id-section12)
 
 <div id='id-section1'/>
 
@@ -1605,4 +1606,234 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   # Creates a new folder (accepts either absolute or relative file paths):
 
   os.makedirs('/Users/Guest/Delicious/Waffles')
+  ```
+
+### 11.31 - Reading and Writing Plaintext Files
+
+- Three steps to **reading** plaintext files:
+
+  ```python
+  # The `open()` function opens a plaintext file in "read mode" (default)
+  # and returns a file object:
+
+  helloFile = open('/Users/Guest/hello.txt')
+
+  # The file object includes the "read()" method that returns a string
+  # containing the file's contents:
+
+  content = helloFile.read()
+
+  # Close the file:
+
+  helloFile.close()
+  ```
+
+  - **NOTE:** Instead of `read()`, you can use the `readlines()` method to return all lines as strings inside of a list. For example, if the file `hello.txt` contained the following text...
+
+    ```
+    Hello, world!
+    How are you?
+    ```
+
+    ...then `read()` and `readlines()` will process the text accordingly:
+
+    ```python
+    helloFile.read()        # 'Hello, world!\nHow are you?'
+
+    helloFile.readlines()   # ['Hello, world!\n', 'How are you?']
+    ```
+
+- To **write** to a plaintext file (i.e., overwrite its contents), pass the string `'w'` as the second argument to the `open()` function. To **append** new text to a file (i.e., add to the end of the file, rather than overwrite its contents), pass the `'a'` string. In either case, if the file does not already exist, then Python will create a new `txt` file for you to write to:
+
+  ```python
+  helloFile = open('/Users/Guest/hello2.txt', 'w')
+
+  # Use the "write()" method to write:
+
+  helloFile.write('Hello!!!\n')   # NOTE: Will return the number of bytes written
+
+  helloFile.close()
+  ```
+
+  - **NOTE:** Python will *not* automatically add newline characters when writing/appending text content. So newlines must be added manually if desired.
+
+- If you need to store **complex data** such as lists/dictionaries (rather than just plaintext) to your storage device, use the `shelve` module to create a **binary shelf file**:
+
+  ```python
+  import shelve
+
+  # Returns a "shelf" data object that will be saved to your storage device
+  # as a shelf file named "mydata" in the current working directory:
+
+  shelfFile = shelve.open('mydata')
+
+  # Make changes to the shelf file in the same manner as a dictionary:
+
+  shelfFile['cats'] = ['Kiwi', 'Penny', 'Clover']
+
+  shelfFile['dogs'] = ['Bambi', 'Buzz', 'Elway']
+
+  # Close the file:
+
+  shelfFile.close()
+  ```
+
+  - **NOTE:** On Mac OS X, the shelf file will be saved with the `.db` extension. Its contents can be accessed from a Python program as follows:
+
+    ```python
+    # NOTE: The "shelve.open()" method opens a shelf file in read-write mode:
+
+    shelfFile = shelve.open('mydata')
+
+    shelfFile['cats']           # ['Kiwi', 'Penny', 'Clover']
+
+    # List all keys in a shelf file:
+
+    list(shelfFile.keys())      # ['cats', 'dogs']
+
+    # List all values in a shelf file:
+
+    list(shelfFile.values())    # [['Kiwi', 'Penny', 'Clover'],
+                                # ['Bambi', 'Buzz', 'Elway']]
+    ```
+
+### 11.32 - Copying and Moving Files and Folders
+
+- The `shutil` (Shell Utilities) module allows you to copy and move files and folders:
+
+  ```python
+  import shutil
+
+  # COPY a file (first argument) to a new folder (second argument):
+
+  shutil.copy('/Users/Guest/hello.txt', '/Users/Guest/Delicious')
+
+  # COPY and RENAME a file to a new folder ('/Delicious.txt'):
+
+  shutil.copy('/Users/Guest/hello.txt', '/Users/Guest/Delicious/spam.txt')
+
+  # COPY an entire FOLDER:
+
+  shutil.copytree('/Users/Guest/Delicious', '/Users/Guest/Delicious_Backup')
+
+  # MOVE a file to a new location:
+
+  shutil.move('/Users/Guest/Delicious/spam.txt', '/Users/Guest/Waffles')
+
+  # MOVE and RENAME a file to a new location:
+
+  shutil.move('/Users/Guest/Delicious/spam.txt', '/Users/Guest/hello.txt')
+  ```
+
+  - **NOTE:** `shutil` does not have a method dedicated to renaming a file without copying/moving the file; however, you can accomplish the same result by using the `move()` method and setting the destination path to be the same as the original filepath:
+
+    ```python
+    shutil.move('/Users/Guest/hello.txt', '/Users/Guest/eggs.txt')
+    ```
+
+### 11.33 - Deleting Files
+
+- The `os` module has an `unlink()` method that can be used for permanently deleting a **single file**, and a `rmdir()` for permanently deleting an **empty folder**:
+
+  ```python
+  import os
+
+  # Deletes a file:
+
+  os.unlink('/Users/Guest/Delicious/eggs.txt')
+
+  # Deletes an empty folder:
+
+  os.unlink('/Users/Guest/Delicious')
+  ```
+
+- To permanently remove a folder and all of its contents, use the `shutil.rmtree()` method:
+
+  ```python
+  import shutil
+
+  shutil.rmtree('/Users/Guest/Waffles')
+  ```
+
+- A better practice is to send a file/folder to your OS's **trash** or **recycling bin** (rather than permanently deleting the file/folder) by using the [send2trash](https://pypi.org/project/Send2Trash/) third-party module:
+
+  ```python
+  import send2trash
+
+  send2trash.send2trash('/Users/Guest/Delicious/eggs.txt')
+  ```
+
+### 11-34 - Walking a Directory Tree
+
+- The `os.walk()` method allows you to iterate through and execute code upon all of the files or folders within a specified folder:
+
+  ```python
+  import os
+
+  for folderName, subfolders, filenames in os.walk('/Users/Guest'):
+      # Delete subfolders containing the string 'fish' in the subfolder name:
+      for subfolder in subfolders:
+          if 'fish' in subfolder:
+              os.rmdir(subfolder)
+
+      # Copy all ".py" files to ".backup" files:
+      for file in filenames:
+          if file.endswith('.py'):
+              shutil.copy(
+                  os.path.join(folderName, file),
+                  os.path.join(folderName, file + '.backup')
+              )
+  ```
+
+[Back to TOC](#id-toc)
+
+<div id='id-section12'/>
+
+## Section 12: Debugging
+
+### 12.35 - The raise and assert Statements
+
+- Python automatically raises one of its built-in **exceptions** whenever it tries to run invalid code; however, you can also raise your own exceptions with a `raise` statement. A **traceback** will be logged upon raising the exception, which allows you to see the specific line of code that triggered the exception:
+
+  ```python
+  raise Exception('This is the error message.)
+  ```
+
+  - **TIP:** To save a running log of cleanly formatted error messages (as strings), use the `traceback.format_exc()` module:
+
+    ```python
+    import traceback
+
+    try:
+        raise Exception('This is the error message.')
+    except:
+        errorFile = open('error-log.txt', 'a')
+        errorFile.write(traceback.format_exc())
+        efforFile.close()
+        print('The traceback info was written to error-log.txt')
+    ```
+
+- An **assertion** can be used to perform a "sanity check". See the following example of a traffic light simulator:
+
+  ```python
+  mainStreet = {'ns': 'green', 'ew': 'red'}
+
+
+  def switchLights(intersection):
+      for key in intersection.keys():
+          if intersection[key] == 'green':
+              intersection[key] == 'yellow'
+          elif intersection[key] == 'yellow':
+              intersection[key] == 'red'
+          elif intersection[key] == 'red':
+              intersection[key] == 'green'
+      # This program will raise an exception when the assertion fails by returning
+      # 'False' on the second run, in which the N/S light will be 'yellow' and the
+      # E/W light will be 'green'. As traffic should only be flowing when one
+      # light on the intersection is 'red', the assert statement allows you to
+      # immediately detect the problem:
+      assert 'red' in intersection.values(), 'Neither light is red!' + str(intersection)
+
+
+  switchLights(mainStreet)
   ```
