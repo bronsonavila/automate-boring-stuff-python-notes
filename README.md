@@ -20,6 +20,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 11: [Files](#id-section11)
 - Section 12: [Debugging](#id-section12)
 - Section 13: [Web Scraping](#id-section13)
+- Section 14: [Excel, Word, and PDF Documents](#id-section14)
 
 <div id='id-section1'/>
 
@@ -2088,5 +2089,228 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 
   snippet.text    # 'The official home of the Python Programming Language.'
   ```
+
+[Back to TOC](#id-toc)
+
+<div id='id-section14'/>
+
+## Section 14: Excel, Word, and PDF Documents
+
+### 14.42 - Reading Excel Spreadsheets
+
+- Python can read and write Excel files via the [openpyxl](https://openpyxl.readthedocs.io/en/stable/) third-party module:
+
+  ```python
+  # NOTE: Ensure that the CWD is the directory containing your Excel file.
+
+  import openpyxl
+
+  # Open the Excel file (stored as a 'Workbook' object):
+
+  workbook = openpyxl.load_workbook('example.xlsx')   # (Located in: ./14-42)
+
+  # List the names of all sheets in the workbook:
+
+  workbook.sheetnames                 # ['Sheet1', 'Sheet2', 'Sheet3']
+
+  # Access a specific sheet in the workbook (stored as a 'Worksheet' object):
+
+  sheet = workbook['Sheet1']
+
+  # Access the value of a specific cell within a sheet by row/column NAME:
+
+  sheet['A1'].value                   # datetime.datetime(2015, 4, 5, 13, 34, 2)
+  str(sheet['A1'].value)              # '2015-04-05 13:34:02'
+
+  # Access a cell by row/column NUMBER (useful when iterating with a loop):
+
+  sheet.cell(row=1, column=2).value   # 'Apples'
+  ```
+
+### 14.43 - Editing Excel Spreadsheets
+
+- Example:
+
+  ```python
+  import openpyxl
+
+  # Create a new 'Workbook' object:
+
+  workbook = openpyxl.Workbook()
+
+  # Access the workbook's 'Sheet' object
+
+  workbook.sheetnames       # ['Sheet']
+  sheet = workbook['Sheet']
+
+  # Assign values to sheet cells:
+
+  sheet['A1'] = 42
+  sheet['A2'] = 'Hello'
+
+  # Add a new worksheet to the workbook:
+
+  newSheet = workbook.create_sheet()
+  workbook.sheetnames       # ['Sheet', 'Sheet1']
+
+  # Change the worksheet's title:
+
+  newSheet.title = 'My New Sheet'
+  workbook.sheetnames       # ['Sheet', 'Sheet1']
+
+  # Specify a new worksheet's order and title upon creation:
+
+  otherSheet = workbook.create_sheet(index=0, title='My Other Sheet')
+  workbook.sheetnames       # ['My Other Sheet', 'Sheet', 'My New Sheet']
+
+  # Save the workbook to your storage device:
+
+  workbook.save('test.xlsx')
+  ```
+
+### 14.44 - Reading and Editing PDFs
+
+- The [PyPDF2](https://pythonhosted.org/PyPDF2/) third-party module can extract data from PDF files, or manipulate existing PDFs to produce a new file. Note, however, that there may be some PDF files that PyPDF2 will be unable to process. PyPDF2 cannot extract images, charts, or other media, but it can extract text and return it as a string:
+
+  ```python
+  import PyPDF2
+  import os
+
+  os.chdir('/Users/bronson/Udemy/automate-the-boring-stuff-with-python/14-44')
+
+  # Open in Read-Binary ('rb') mode because PDFs are binary files:
+
+  pdfFile = open('meetingminutes1.pdf', 'rb')
+
+  # Pass the 'File' object to PyPDF2's "PdfFileReader()",
+  # which will return a 'PDF Reader' object:
+
+  reader = PyPDF2.PdfFileReader(pdfFile)
+
+  # View the number of pages within the PDF file:
+
+  reader.numPages   # 19
+
+  # "getPage()" returns a 'Page' object (numbering starts at 0):
+
+  page = reader.getPage(0)
+
+  # "extractText()" returns a string of all text extracted from the page:
+
+  page.extractText()
+
+  # Print out the text of each page in the PDF file:
+
+  for pageNum in range(reader.numPages):
+      print(reader.getPage(pageNum).extractText())
+  ```
+
+- PyPDF2 cannot edit the text of a PDF file, but it can modify a PDF on the **page level** (i.e., you can add, remove, and reorder pages, but you cannot change a specific line of text on a particular page):
+
+  ```python
+  # Open two PDF files to be combined into a single file:
+
+  pdf1File = open('meetingminutes1.pdf', 'rb')
+  pdf2File = open('meetingminutes2.pdf', 'rb')
+
+  reader1 = PyPDF2.PdfFileReader(pdf1File)
+  reader2 = PyPDF2.PdfFileReader(pdf2File)
+
+  # Create a new 'Writer' object that will create a new PDF file:
+
+  writer = PyPDF2.PdfFileWriter()
+
+  # "addPage()" allows you to append pages to a 'Writer' object:
+
+  for pageNum in range(reader1.numPages):
+      page = reader1.getPage(pageNum)
+      writer.addPage(page)
+
+  for pageNum in range(reader2.numPages):
+      page = reader2.getPage(pageNum)
+      writer.addPage(page)
+
+  # Open a new 'File' object in Write-Binary mode (will become the new PDF):
+
+  outputFile = open('combinedminutes.pdf', 'wb')
+
+  # Save the PDF with the 'Writer' object's "write()" method:
+
+  writer.write(outputFile)
+
+  # Close all files:
+
+  outputFile.close()
+  pdf1File.close()
+  pdf2File.close()
+  ```
+
+### 14.45 - Reading and Editing Word Documents
+
+- Use the [python-docx](https://python-docx.readthedocs.io/en/latest/) third-party module to create and modify Word documents. `python-docx` divides a Word document into three different data structures: a 'Document' object, which contains a list of 'Paragraph' objects, which each contain a list of one or more 'Run' objects (a new run occurs in a paragraph whenever there is a change to the style, e.g., bold, italics, etc.):
+
+  ```python
+  # Import with 'docx' despite the fact that the module is named 'python-docx':
+
+  import docx
+
+  filePath = '/Users/bronson/Udemy/automate-the-boring-stuff-with-python/14-45/'
+
+  # Create a 'Document' object from the Word document file:
+
+  documentObject = docx.Document(filePath + 'demo.docx')
+
+  # View the text of a 'Paragraph' object:
+
+  documentObject.paragraphs       # (Returns a list of all 'Paragraph' objects)
+
+  paragraph = documentObject.paragraphs[1]
+
+  paragraph.text       # 'A plain paragraph having some bold and some italic.'
+
+  # Modify a paragraph's "style", as defined within Word:
+
+  paragraph.style                 # 'Normal'
+
+  paragraph.style = 'Title'
+
+  # View the text of a 'Run' object (split up based on changes to text style):
+
+  paragraph.runs                  # (Returns a list of all 'Run' objects)
+
+  run = paragraph.runs[1]
+
+  run.text                        # 'bold'
+
+  # Check if a 'Run' is bold, italic, or underline (returns a Boolean):
+
+  run.bold                        # True
+
+  run.italic                      # False
+
+  run.underline                   # False
+
+  # Modify a 'Run' object's bold, italic, or underline status:
+
+  run.underline = True
+
+  # Modify a 'Run' object's text:
+
+  run.text = 'bold and underline'
+
+  # Add a new paragraph to the end of the document:
+
+  newParagraph = documentObject.add_paragraph('New paragraph. ')
+
+  # Add additional text content to the new paragraph via "add_run()":
+
+  newParagraph.add_run('New run.')
+
+  # Save the Word document:
+
+  documentObject.save('demo2.docx')
+  ```
+
+  - **NOTE:** The `add_paragraph()` and `add_run()` methods can only add content to the end of a file. If you want to insert additional content in the middle of a file, then you will have to create a new 'Document' object that will have its contents be copied from the source document, and you can add new content in the midst of this copying process.
 
 [Back to TOC](#id-toc)
