@@ -2331,18 +2331,22 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   # Create a "Connection" object that will be used to connect to the specified
   # SMTP server (i.e., the domain name of your email server). The port number
   # for an SMTP server is 587 (via TLS) or 465 (via SSL):
+
   conn = smtplib.SMTP('smtp.gmail.com', 587)
 
   # Establish the connection with the SMTP server (allowing Internet traffic
   # from your Python program). If the connection is successful, you should
   # receive a 2XX HTTP response code:
+
   conn.ehlo()
 
   # Start TLS encryption to encrypt your email login password:
+
   conn.starttls()
 
   # Log in to your account (first argument is username; second is password).
   # For Gmail, you must generate an "App password":
+
   conn.login('sender@gmail.com', 'yourAppPassword')
 
   # Send email. The first argument is the "From" address, and the second is
@@ -2350,6 +2354,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   # header information and the body of the email's message. You must include
   # two newline characters to separate the header and body. "sendmail() will
   # return a dictionary object containing any emails that it FAILED to send:
+
   conn.sendmail(
       'sender@gmail.com',
       'recipient@example.com ',
@@ -2357,6 +2362,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   )
 
   # Close the SMTP connection:
+
   conn.quit()
   ```
 
@@ -2369,36 +2375,45 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   import pyzmail
 
   # Create a "Connection" object to be used with the specified host:
+
   conn = imapclient.IMAPClient('imap.gmail.com', port=993, ssl=True)
 
   # Log in:
+
   conn.login('doe@gmail.com', 'yourAppPassword')
 
   # View all email folders:
+
   conn.list_folders()
 
   # Select an email folder (e.g., inbox) as the first argument. The second
   # argument can be used to toggle "Read Only" mode (if you want to prevent
   # emails from being deleted):
+
   conn.select_folder('INBOX', readonly=True)
 
   # Find an email via the "search()" method. The first argument is a list
   # containing strings formatted according to the imapclient syntax. The
   # method will return a string of unique IDs referencing a particular email:
+
   UIDs = conn.search(['SINCE 20-Aug-2018'])
 
   # Translate a UID into an actual email via the "fetch()" method. The first
   # argument is a list containing the desired UID, and the second argument
   # specifies which parts of an email to retrieve:
+
   rawMessage = conn.fetch([29068], ['BODY[]', 'FLAGS'])
 
   # Parse the body of the raw email message and store it as a "Message" object:
+
   message = pyzmail.PyzMessage.factory(rawMessage[29068][b'BODY[]'])
 
   # View subject line:
+
   message.get_subject()
 
   # View sender/recipient:
+
   message.get_addresses('from')
   message.get_addresses('to')
   message.get_addresses('bcc')
@@ -2406,18 +2421,22 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   # The body of a message can be plaintext, HTML, or a combination of the two.
   # The following can be used to view the length of plaintext and HTML portions.
   # If the specified content does not exist, then "None" will be the value:
+
   message.text_part
   message.html_part
 
   # Retrieve and decode the text content of the email message (usually UTF-8):
+
   message.text_part.get_payload().decode('UTF-8')
 
   # If you have "Read Only" mode disabled, you can delete messages via the
   # "delete_messages()" method that accepts a list of all UIDs to be deleted.
   # (NOTE: This is a PERMANENT deletion. The email is NOT moved to "Trash"):
+
   conn.delete_messages([29068])
 
   # Log out:
+
   conn.logout()
   ```
 
@@ -2437,6 +2456,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   import pyautogui
 
   # Obtain the resolution of your screen (width, height):
+
   width, height = pyautogui.size()
 
   # Obtain the current coordinates of the mouse cursor (width, height).
@@ -2444,20 +2464,24 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   # screen, and the "height" value indicates the number from the TOP.
   # (NOTE: Because the starting position is (0, 0), that means the max position
   # will be one pixel less than the max screen width/height):
+
   pyautogui.position()
 
   # Move the mouse cursor to an ABSOLUTE position by specifying the width
   # coordinate (first argument), the height coordinate (second argument),
   # and the duration in seconds for the movement to occur (third argument):
+
   pyautogui.moveTo(840, 525, duration=0.5)
 
   # Move to the mouse cursor to a RELATIVE position (in relation to the current
   # position of the mouse) via the "moveRel()" method following the same
   # procedure explained above:
+
   pyautogui.moveRel(-10, 0, duration=0.25)
 
   # Left click  on an element at the specified position. If no coordinates are
   # given, then the mouse will simply be clicked at its current position:
+
   pyautogui.click(450, 10)
   ```
 
@@ -2492,17 +2516,22 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   # "typewrite()" sends virtual keypresses to the computer. It can be used
   # in conjunction with "click()" to first click on a text input field. You
   # can specify an "interval" to add a delay (in seconds) between each keypress:
+
   pyautogui.click(1200, 400)    # ( Also accepts tuple: click((1200, 400)) )
+
   pyautogui.typewrite('Hello, world!', interval=0.2)
 
   # To use non-character keys (e.g., left arrow), you must specify the input
   # as strings in a list:
+
   pyautogui.typewrite(['a', 'b', 'left', 'left', 'X', 'Y'])   # 'XYab'
 
   # Press a single key:
+
   pyautogui.press('F1')
 
   # Trigger a keyboard shortcut:
+
   pyautogui.hotkey('command', 'f')    # (Opens search dialog)
   ```
 
@@ -2521,9 +2550,11 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   ```python
   # Displays the coordinates of the element's top left corner, along with
   # width and height of the found element:
+
   pyautogui.locateOnScreen('crop.png')          # (1690, 516, 64, 64)
 
   # Displays the coordinates of the element's center point on screen:
+  
   pyautogui.locateCenterOnScreen('crop.png')    # (1722, 548)
   ```
 
