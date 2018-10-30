@@ -2362,7 +2362,6 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 ### 15.47 - Checking Your Email Inbox
 
 - The Internet Message Access Protocol (IMAP) is an Internet standard protocol used by email clients to retrieve email messages from a mail server over TCP/IP. Python implements IMAP via its built-in `imaplib` module. However, there are two third-party modules that may make using IMAP more user-friendly: [imapclient](https://imapclient.readthedocs.io/en/2.1.0/) and [pyzmail](http://www.magiksys.net/pyzmail/).
-  - **IMPORTANT:** If you are receiving an SSLCertVerificationError while using `imapclient`, you may need to [downgrade to version 0.13](https://stackoverflow.com/questions/34714342/imapclient-error-on-windows). If you are unable to install `pyzmail`, you may need to install [pyzmail36](https://stackoverflow.com/questions/40924672/pip-install-pyzmail-error-message) instead.
 
   ```python
   import imapclient
@@ -2420,5 +2419,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   # Log out:
   conn.logout()
   ```
+
+  - **IMPORTANT:** If you are receiving an SSLCertVerificationError while using `imapclient`, you may need to [downgrade to version 0.13](https://stackoverflow.com/questions/34714342/imapclient-error-on-windows). If you are unable to install `pyzmail`, you may need to install [pyzmail36](https://stackoverflow.com/questions/40924672/pip-install-pyzmail-error-message) instead.
 
 [Back to TOC](#id-toc)
