@@ -2,7 +2,7 @@
 
 ## About
 
-This project is a WIP based on [Automate the Boring Stuff with Python Programming](https://www.udemy.com/automate/) by Al Sweigart. This repository is intended to serve as a personal quick reference guide and not a full-fledged tutorial. For more in-depth coverage, please consult the cited Udemy course, or review the free e-book available [here](http://automatetheboringstuff.com/).
+This repository is derived from the lectures covered in [Automate the Boring Stuff with Python Programming](https://www.udemy.com/automate/) by Al Sweigart. This repository is intended to serve as a personal quick reference guide and not a full-fledged tutorial. For more in-depth coverage, please consult the cited Udemy course, or review the free e-book available [here](http://automatetheboringstuff.com/).
 
 <div id='id-toc'/>
 
