@@ -22,6 +22,7 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
 - Section 13: [Web Scraping](#id-section13)
 - Section 14: [Excel, Word, and PDF Documents](#id-section14)
 - Section 15: [Email](#id-section15)
+- Section 16: [GUI Automation](#id-section16)
 
 <div id='id-section1'/>
 
@@ -2421,5 +2422,111 @@ This project is a WIP based on [Automate the Boring Stuff with Python Programmin
   ```
 
   - **IMPORTANT:** If you are receiving an SSLCertVerificationError while using `imapclient`, you may need to [downgrade to version 0.13](https://stackoverflow.com/questions/34714342/imapclient-error-on-windows). If you are unable to install `pyzmail`, you may need to install [pyzmail36](https://stackoverflow.com/questions/40924672/pip-install-pyzmail-error-message) instead.
+
+[Back to TOC](#id-toc)
+
+<div id='id-section16'/>
+
+## Section 16: GUI Automation
+
+### 16.48 - Controlling the Mouse from Python
+
+- [PyAutoGUI](https://pyautogui.readthedocs.io/en/latest/) is a third-party Python module for programmatically controlling the mouse and keyboard:
+
+  ```python
+  import pyautogui
+
+  # Obtain the resolution of your screen (width, height):
+  width, height = pyautogui.size()
+
+  # Obtain the current coordinates of the mouse cursor (width, height).
+  # The "width" value indicates the number of pixels from the LEFT of the
+  # screen, and the "height" value indicates the number from the TOP.
+  # (NOTE: Because the starting position is (0, 0), that means the max position
+  # will be one pixel less than the max screen width/height):
+  pyautogui.position()
+
+  # Move the mouse cursor to an ABSOLUTE position by specifying the width
+  # coordinate (first argument), the height coordinate (second argument),
+  # and the duration in seconds for the movement to occur (third argument):
+  pyautogui.moveTo(840, 525, duration=0.5)
+
+  # Move to the mouse cursor to a RELATIVE position (in relation to the current
+  # position of the mouse) via the "moveRel()" method following the same
+  # procedure explained above:
+  pyautogui.moveRel(-10, 0, duration=0.25)
+
+  # Left click  on an element at the specified position. If no coordinates are
+  # given, then the mouse will simply be clicked at its current position:
+  pyautogui.click(450, 10)
+  ```
+
+  - **NOTE:** The "click" functionality also includes the following methods: `doubleClick()`, `rightClick()`, and `middleClick()`. Additionally, you can perform **click-and-drag** operations in the same manner as `moveTo()` and `moveRel()` but with the left mouse button treated as being held down by using `dragTo()` and `dragRel()`
+
+  - **TIP:** If your program ever results in the loss of control over your mouse cursor, force the cursor to the top left corner of the screen (0, 0) to kill the process by triggering PyAutoGUI's **failsafe exception**.
+
+- Run the following code from the terminal (note IDLE) to see your current mouse cursor position in real-time. This is useful for planning out all of the locations that you want your program to click:
+
+  ```python
+  import pyautogui, sys
+
+  print('Press Ctrl-C to quit.')
+
+  try:
+      while True:
+          x, y = pyautogui.position()
+          positionStr = 'X: ' + str(x).rjust(4) + ' Y: ' + str(y).rjust(4)
+          print(positionStr, end='')
+          print('\b' * len(positionStr), end='', flush=True)
+  except KeyboardInterrupt:
+      print('\n')
+  ```
+
+  - Alternatively, PyAutoGUI has a method called `displayMousePosition()` that operates in a similar manner.
+
+### 16.49 - Controlling the Keyboard from Python
+
+- Example:
+
+  ```python
+  # "typewrite()" sends virtual keypresses to the computer. It can be used
+  # in conjunction with "click()" to first click on a text input field. You
+  # can specify an "interval" to add a delay (in seconds) between each keypress:
+  pyautogui.click(1200, 400)    # ( Also accepts tuple: click((1200, 400)) )
+  pyautogui.typewrite('Hello, world!', interval=0.2)
+
+  # To use non-character keys (e.g., left arrow), you must specify the input
+  # as strings in a list:
+  pyautogui.typewrite(['a', 'b', 'left', 'left', 'X', 'Y'])   # 'XYab'
+
+  # Press a single key:
+  pyautogui.press('F1')
+
+  # Trigger a keyboard shortcut:
+  pyautogui.hotkey('command', 'f')    # (Opens search dialog)
+  ```
+
+  - **NOTE:** You can view a list of all possible keys that can be accessed by `typewrite()` by accessing `pyautogui.KEYBOARD_KEYS`
+
+### 16.50 - Screenshots and Image Recognition
+
+- With PyAutoGUI, you can save a screenshot to an absolute or relative path:
+
+  ```python
+  pyautogui.screenshot('example.png')
+  ```
+
+- If you have a cropped image of an element that is presently displayed on your screen, you can locate the coordinates of the element by using `locateOnScreen()` or `locateCenterOnScreen()`, which is useful for targeting a specific element for to be clicked:
+
+  ```python
+  # Displays the coordinates of the element's top left corner, along with
+  # width and height of the found element:
+  pyautogui.locateOnScreen('crop.png')          # (1690, 516, 64, 64)
+
+  # Displays the coordinates of the element's center point on screen:
+  pyautogui.locateCenterOnScreen('crop.png')    # (1722, 548)
+  ```
+
+  - **NOTE:** These image recognition methods are computationally expensive and take time to complete (and therefore will not work on moving content). Additionally, the element on screen must be a **pixel perfect** match of the reference image.
 
 [Back to TOC](#id-toc)
