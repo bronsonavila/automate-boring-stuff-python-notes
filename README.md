@@ -2554,7 +2554,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   pyautogui.locateOnScreen('crop.png')          # (1690, 516, 64, 64)
 
   # Displays the coordinates of the element's center point on screen:
-  
+
   pyautogui.locateCenterOnScreen('crop.png')    # (1722, 548)
   ```
 
