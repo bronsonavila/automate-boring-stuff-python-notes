@@ -2357,7 +2357,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 
   conn.sendmail(
       'sender@gmail.com',
-      'recipient@example.com ',
+      'recipient@example.com',
       'Subject: Straw Dogs\n\nToday the good life means making full use of science and technology...it means seeking peace...it means cherishing freedom.'
   )
 
