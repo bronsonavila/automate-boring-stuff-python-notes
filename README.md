@@ -2352,7 +2352,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   # Send email. The first argument is the "From" address, and the second is
   # the "To" address. The third argument is the email content, including
   # header information and the body of the email's message. You must include
-  # two newline characters to separate the header and body. "sendmail() will
+  # two newline characters to separate the header and body. "sendmail()" will
   # return a dictionary object containing any emails that it FAILED to send:
 
   conn.sendmail(
