@@ -1241,7 +1241,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 
   haMatchObject = haRegex.search('He said, "hahahaha"')
 
-  haMatchObject.group()     # 'hahahaha'
+  haMatchObject.group()       # 'hahahaha'
 
   # By default, Python will perform a "greedy" match and return the longest
   # possible match that it finds (in this case, 5 digits rather than 3):
