@@ -870,7 +870,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   ```python
   eggs = {'name': 'Zophie', 'species': 'cat', 'age': 8}
 
-  egg.get('age', 0)       # 8
+  eggs.get('age', 0)       # 8
 
   eggs.get('color', '')    # ''
   ```
