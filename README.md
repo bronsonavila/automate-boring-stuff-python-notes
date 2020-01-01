@@ -395,7 +395,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 
   - **NOTE:** If the value returned is considered "empty" (or if the return statement is omitted entirely), Python still returns a value called `None` (i.e., a value that represents a lack of a value). The `None` value will not be visibly displayed in the console.
 
-- Some functions accept **keyword arguments**, which are used as optional arguments to pass to a function call. For example, the `print()` function adds a newline character by default to the end of the string it prints. However, this behavior can be modified by changing the value of `end` keyword argument:
+- Some functions accept **keyword arguments**, which are used as optional arguments to pass to a function call. For example, the `print()` function adds a newline character by default to the end of the string it prints. However, this behavior can be modified by changing the value of the `end` keyword argument:
 
   ```python
   # Prints "Hello" and "World" on two separate lines:
