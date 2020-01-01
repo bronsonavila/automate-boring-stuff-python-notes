@@ -1077,11 +1077,11 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 - Use the `strip()`, `rstrip()`, and `lstrip()` methods to trim whitespace characters off of a string. You can insert a string as an argument, and any contiguous set of characters in that argument (regardless of order) will be stripped from the end(s) of the string:
 
   ```python
-  '  -x-  '.strip()                       # 'x'
+  '  x  '.strip()                       # 'x'
 
-  '  -x-  '.lstrip()                      # 'x   '
+  '  x  '.lstrip()                      # 'x   '
 
-  '  -x-  '.rstrip()                      # '   x'
+  '  x  '.rstrip()                      # '   x'
 
   'SpamBaconSpamEggsSpam'.strip('ampS')   # 'BaconSpamEggs'
   ```
