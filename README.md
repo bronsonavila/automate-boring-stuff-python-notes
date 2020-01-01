@@ -632,7 +632,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   disposition   # 'loud'
   ```
 
-  - **NOTE:** Multiple assignments work not only with lists, but also comma-delineated values outside of a list:
+  - **NOTE:** Multiple assignments work not only with lists, but also comma-delimited values outside of a list:
 
     ```python
     size, color, disposition = 'slim', 'gray', 'quiet'
