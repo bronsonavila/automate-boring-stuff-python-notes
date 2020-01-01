@@ -1196,7 +1196,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 
 ### 10.25 - Repetition in Regex Patterns and Greedy/Nongreedy Matching
 
-- The `?` character matches the preceding expression **0 or 1** time (i.e., the expression can either appear once or not at all for a match to occur):
+- The `?` character matches the preceding expression **0 or 1** time(s) (i.e., the expression can either appear once or not at all for a match to occur):
 
   ```python
   import re
