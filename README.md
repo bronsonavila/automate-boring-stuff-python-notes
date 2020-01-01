@@ -1086,7 +1086,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   'SpamBaconSpamEggsSpam'.strip('ampS')   # 'BaconSpamEggs'
   ```
 
-- The `replace()` methods replaces a specified phrase with another specified phrase:
+- The `replace()` method replaces a specified phrase with another specified phrase:
 
   ```python
   'Hello there!'.replace('e', '3')    # 'H3llo th3r3!'
