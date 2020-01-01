@@ -1559,7 +1559,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 
   os.path.abspath('spam.png')       # '/Users/Guest/Documents/spam.png'
 
-  # You can use the ".." symbol to move to a higher folder in the CWD:
+  # You can use the ".." symbol to move to a higher folder above the CWD:
 
   os.path.abspath('../spam.png')    # '/Users/Guest/spam.png'
   ```
