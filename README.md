@@ -1051,7 +1051,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
   '\n'.join(spam)   # (Inserts newline character after each item)
   ```
 
-- The `split()` method splits a string into a list. The method splits a string according to whitespace separation by default; however, you can specify the string to be used as the separator (first parameter) and the number of splits to perform (second parameter):
+- The `split()` method splits a string into a list. The method splits a string according to whitespace separation by default. However, you can specify the string to be used as the separator (first parameter) and the number of splits to perform (second parameter):
 
   ```python
   spam = 'My name is Simon'
