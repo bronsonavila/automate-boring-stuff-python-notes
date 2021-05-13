@@ -2489,7 +2489,7 @@ This repository is derived from the lectures covered in [Automate the Boring Stu
 
   - **TIP:** If your program ever results in the loss of control over your mouse cursor, force the cursor to the top left corner of the screen (0, 0) to kill the process by triggering PyAutoGUI's **failsafe exception**.
 
-- Run the following code from the terminal (note IDLE) to see your current mouse cursor position in real-time. This is useful for planning out all of the locations that you want your program to click:
+- Run the following code from the terminal (not IDLE) to see your current mouse cursor position in real-time. This is useful for planning out all of the locations that you want your program to click:
 
   ```python
   import pyautogui, sys
